@@ -1,0 +1,26 @@
+# Brand assets
+
+These are the assets to upload to **Softr Files** so they can be referenced in your blocks.
+
+## Files
+
+- `palette.csv` — the seven (plus three support) brand colours, with hex codes and where each is used. Open in Excel/Numbers to copy values.
+- `logo-wordmark.png` — `taylored.HOME` wordmark with citron full-stops baked in, for image-mode logo use.
+- `logo-icon.png` — square icon (lowercase `t.`) for favicons and avatars.
+- `personas/` — hero illustrations of Regina (the persona).
+- `numbers/` — citron-circle number badges 01–07 used on the Steps page.
+
+## Where to upload in Softr
+
+1. **App settings → Files** — every PNG and SVG goes here. Softr serves them at `/files/{filename}`.
+2. **App settings → Branding → Logo** — Image mode → select `logo-wordmark.png`.
+3. **App settings → Branding → Favicon** — select `logo-icon.png`.
+4. **App settings → Custom code → Header** — for the citron-dot wordmark and The Seasons font, see `softr/custom-code/_shared.css` and `prompts/00-app-setup.md`.
+
+## Fonts
+
+The font files live alongside the project's design folder (`design/fonts/`):
+- Mansfield (display) — Google Fonts has it; load via Google Fonts in App settings → Fonts.
+- Inter (body) — Google Fonts.
+- Anonymous Pro (mono) — Google Fonts.
+- The Seasons Light — **upload `TheSeasons-Light.otf`** to Softr Files, then paste the @font-face from `prompts/00-app-setup.md` into the App's custom-code header.

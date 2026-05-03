@@ -1,0 +1,10 @@
+slot,role,token,hex,where_used
+Primary text,ink,t-ink,#2B2B2B,headlines · body text · sidebars
+Background,cream,t-cream,#F0EEE9,page background · empty space
+Card surface,paper,t-paper,#FFFFFF,cards · panels · sheets
+Primary accent,citron,t-citron,#CEFF35,primary CTAs · current-step pill · brand full-stop
+Secondary,sky,t-sky,#A6CFE0,secondary cards · doc category pills (legal)
+Success,olive,t-olive,#898F64,done states · completed pills
+Warning,amber,t-amber,#E0A85B,warning pills · "act soon" indicators
+Danger,clay,t-clay,#C84A3F,errors · cancellation modals
+Border,line,t-line,#E5E1D7,card borders · dividers · disabled state
