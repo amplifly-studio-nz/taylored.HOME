@@ -1,67 +1,112 @@
-# 03 · Steps to settlement
-
-**Path:** `/steps`
-**Page type:** List (vertical timeline)
-**Visibility:** Logged-in Owner
-**Linked Airtable table:** Steps (filtered by Owner = current user, sorted by StepOrder ASC)
+# Copy · 03 Steps to settlement
 
 ---
 
-## PROMPT
+## Page header
 
-> Create a "Steps to settlement" page at `/steps`. It is a vertical timeline of seven labelled steps. The current step is highlighted; completed steps are subdued; upcoming steps are even lighter.
->
-> **Page header (above the list):**
-> - Eyebrow: `YOUR PATH TO SETTLEMENT · LOT 11`
-> - Headline: `Seven steps. We'll walk you through.` (`Seven steps` in The Seasons script, citron full-stops)
-> - Sub: `Tap any step to see what's involved, who's responsible, and what's expected of you.`
->
-> **List block** — vertical, full-width within a max-width 1080px container.
->
-> Each step row is a card with:
-> - **Left column (96px wide):** A large numeric badge (1–7) using the assets in `softr/assets/brand/numbers/` (PNG, citron circle behind ink digit). For done steps, the badge desaturates; for upcoming steps, it's outlined only.
-> - **Middle column (flex):** Step title (Mansfield Bold 22px), one-line plain-English description, due date pill, and a "STATUS" pill: `Done` (olive), `In progress` (citron), `Upcoming` (light grey).
-> - **Right column:** Disclosure caret. Clicking the row reveals the step detail panel inline (no page change).
->
-> **The 7 steps (from Airtable Steps table):**
-> 1. Welcome &amp; agreement
-> 2. Settlement Letter 1 — title insurance
-> 3. Walkthrough booking opens
-> 4. Walkthrough day
-> 5. 10-day call &amp; titles in
-> 6. Settlement Letter 2 &amp; final invoice
-> 7. Settlement day
->
-> **Inline detail panel** (revealed on row click):
-> - 3-column grid: `What's involved`, `Who's responsible`, `What we need from you`
-> - Each column header in citron mono caps, body 14px
-> - At the bottom: any related documents (linked from `Steps.RelatedDocuments`) as small chips, and a "Have a question? Ask taylored." button → opens `/ask` with the step pre-filled as context.
->
-> **Sticky right rail (desktop only):** A mini contact card with Damien's photo, name, role, and a `Call · Text · Email` row. Sits at top-right and stays visible as the user scrolls the timeline.
+**Eyebrow:**
+```
+YOUR PATH TO SETTLEMENT · LOT 11
+```
+
+**Headline:**
+```
+Seven steps. We'll walk you through.
+```
+(Render `Seven steps` in The Seasons script.)
+
+**Sub:**
+```
+Tap any step to see what's involved, who's responsible, and what's expected of you.
+```
 
 ---
 
-## Manual setup
+## The seven steps
 
-1. **Number badges** — Softr Image field on Steps table. Add a `BadgeImage` field that is a single attachment, then upload `softr/assets/brand/numbers/01.png` through `07.png` to each step row. (Or use a formula field that returns `{StepOrder}.png` and a Softr lookup that joins to a "BadgeAssets" table.)
+For each step: the short name (used in timelines), the full title (used on the page and detail page), and the one-line plain-English description.
 
-2. **Status pill colours** — Conditional formatting in the List block, based on `Steps.Status`:
-   - `Done` → olive `#898F64`
-   - `In Progress` → citron `#CEFF35`, dark text
-   - `Upcoming` → light grey `#E5E1D7`, ink text
+### Step 1 — Welcome &amp; agreement
+**Short:** Welcome
+**Full title:** `Welcome &amp; sale agreement.`
+**Description:** `Your sale agreement is signed and your deposit's in. We send you the welcome pack and your portal goes live.`
+**Owner action:** `Nothing right now — we'll let you know.`
 
-3. **Inline expansion** — Softr's List block doesn't natively expand-in-place. Two options:
-   - **Easier**: Make each row link to `/steps/{record_id}` (Step detail page) — see `prompts/04-step-detail.md`.
-   - **Custom**: Use a Custom Code block with the steps data wired in via Softr dynamic tags. Snippet skeleton in `softr/custom-code/steps-expandable.html` (optional; build only if the link-out flow feels too heavy).
+### Step 2 — Settlement Letter 1
+**Short:** Letter 1
+**Full title:** `Settlement Letter 1.`
+**Description:** `We send the first settlement letter to you and your lawyer. It covers title insurance and what to expect over the next four weeks.`
+**Owner action:** `Forward to your lawyer if they ask. We've already sent it to Tom.`
 
-4. **Sticky contact card** — Position-relative wrapper. Use a 2-column List block with the right column being a "single-record details" pull from `Owners.AssignedDamien` lookup. Set the right column to `position: sticky` via Custom Code block for the column.
+### Step 3 — Walkthrough booking opens
+**Short:** Booking
+**Full title:** `Walkthrough booking opens.`
+**Description:** `10 days before settlement, you can pick a 45-minute walkthrough slot with Damien and Simon.`
+**Owner action:** `Pick a slot from /walkthrough. We'll email you the confirmation.`
+
+### Step 4 — Walkthrough day
+**Short:** Walkthrough
+**Full title:** `Your walkthrough.`
+**Description:** `45 minutes onsite with Damien and Simon. We show you how everything works and capture any snag-list items.`
+**Owner action:** `Bring questions, your phone for photos, and closed-toe shoes.`
+
+### Step 5 — 10-day call &amp; titles in
+**Short:** 10-day call
+**Full title:** `10-day call &amp; titles in.`
+**Description:** `Council signs off your title (CCC). We call you to walk through what's left and answer any questions.`
+**Owner action:** `Pick up Damien's call. Bring questions about settlement.`
+
+### Step 6 — Settlement Letter 2 &amp; final invoice
+**Short:** Letter 2
+**Full title:** `Settlement Letter 2 &amp; final invoice.`
+**Description:** `We send the final settlement letter to you and your lawyer, with the final invoice from us. Your lawyer handles the money side.`
+**Owner action:** `Sit tight. Tom will tell you when funds need to be in your trust account.`
+
+### Step 7 — Settlement day
+**Short:** Settlement
+**Full title:** `Settlement day.`
+**Description:** `The lawyers settle in the morning. Damien hands you the keys at the property.`
+**Owner action:** `Show up. Bring something to put champagne in.`
 
 ---
 
-## Acceptance check
+## Status pill copy
 
-- [ ] All 7 steps render in the right order with the correct number badges
-- [ ] The current step (StepOrder = currentStep) is visibly highlighted (citron pill)
-- [ ] Tapping a step either expands inline or routes to the step detail page
-- [ ] The right-rail Damien card is sticky and links call, sms, mailto correctly
-- [ ] On mobile, the right rail stacks below the list (not floating)
+- `Done` — for steps already complete
+- `In progress` — for the current step (only one at a time)
+- `Coming up` — for upcoming steps
+
+(Soft "Coming up" instead of "Pending" / "Upcoming" — friendlier.)
+
+---
+
+## Contact rail copy (right side, sticky on desktop)
+
+**Eyebrow:**
+```
+QUESTIONS?
+```
+
+**Heading:**
+```
+Damien is your main contact.
+```
+
+**Sub:**
+```
+Call, text, or email. He'll loop in Simon or Tom if it's better answered there.
+```
+
+**Buttons:**
+- `Call`
+- `Text`
+- `Email`
+
+---
+
+## Bottom CTA strip
+
+```
+Got a question about a specific step? Ask taylored. →
+```
+(links to /ask)
