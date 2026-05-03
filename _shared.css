@@ -1,0 +1,41 @@
+# Custom code — drop into Softr Custom Code blocks
+
+Three things in the portal don't map cleanly to a stock Softr block. They're built here as standalone HTML/CSS/JS snippets that you paste into Softr Custom Code blocks. No React, no dependencies, no build step.
+
+## Files
+
+- `_shared.css` — brand variables and base typography. **Paste this once into App settings → Custom code → Header**, then every other snippet picks up the variables.
+- `countdown.html` — the `{N} DAYS · {H} HOURS` settlement countdown. Goes in the dashboard hero.
+- `steps-timeline.html` — horizontal 7-step pill timeline with done/in-progress/upcoming states. Goes on the dashboard, just below the hero.
+- `concierge-bubble.html` — bottom-right floating bubble that opens an inline chat panel. Goes in App settings → Custom code → Footer (so it appears on every page).
+
+## Pattern
+
+Each file starts with a comment block:
+```
+<!--
+  REQUIRES: _shared.css must be in the app header.
+  WIRE: replace {{...}} placeholders with Softr dynamic tags before publishing.
+  PASTE TARGET: ...
+-->
+```
+
+Read it. Replace the placeholders. Paste.
+
+## Brand tokens (defined in _shared.css)
+
+```
+--t-ink: #2B2B2B
+--t-ink-lt: #6B6B6B
+--t-paper: #FFFFFF
+--t-cream: #F0EEE9
+--t-citron: #CEFF35
+--t-citron-deep: #B8E62E
+--t-sky: #A6CFE0
+--t-olive: #898F64
+--t-amber: #E0A85B
+--t-clay: #C84A3F
+--t-line: #E5E1D7
+```
+
+These are the same tokens your portal designs use. Don't re-define them inside individual snippets — pull from the variables.

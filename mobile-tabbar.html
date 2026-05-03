@@ -1,0 +1,118 @@
+<!--
+  taylored.HOME — Settlement countdown
+  ------------------------------------
+  REQUIRES: _shared.css in the app header.
+  PASTE TARGET: Custom Code block on the Dashboard, inside the hero card.
+  WIRE: replace {{Lots.SettlementDate}} with a Softr dynamic tag bound to the
+        current logged-in owner's Lot record. Format: ISO date like 2026-05-18.
+
+  Renders: a live-updating "{N} DAYS · {H} HOURS" counter.
+  Updates every minute. No external dependencies.
+-->
+
+<div class="t-countdown" data-settlement-date="{{Lots.SettlementDate}}">
+  <div class="t-countdown__eyebrow">SETTLEMENT &middot; <span class="t-countdown__date-label"></span></div>
+  <div class="t-countdown__number">
+    <span class="t-countdown__days">--</span>
+    <span class="t-countdown__sep">DAYS &middot;</span>
+    <span class="t-countdown__hours">--</span>
+    <span class="t-countdown__sep">HOURS</span>
+  </div>
+  <div class="t-countdown__sub">Until you have the keys.</div>
+</div>
+
+<style>
+  .t-countdown {
+    color: var(--t-paper, #FFFFFF);
+    font-family: var(--t-font-body, "Inter", sans-serif);
+    padding: 8px 0;
+  }
+  .t-countdown__eyebrow {
+    font-family: var(--t-font-mono, monospace);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    color: var(--t-citron, #CEFF35);
+    text-transform: uppercase;
+    margin: 0 0 16px;
+  }
+  .t-countdown__number {
+    font-family: var(--t-font-display, "Inter Black", sans-serif);
+    font-weight: 900;
+    font-size: clamp(56px, 9vw, 96px);
+    letter-spacing: -0.035em;
+    line-height: 0.95;
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    flex-wrap: wrap;
+    color: var(--t-paper, #FFFFFF);
+  }
+  .t-countdown__days,
+  .t-countdown__hours {
+    font-variant-numeric: tabular-nums;
+  }
+  .t-countdown__sep {
+    font-size: 0.4em;
+    font-family: var(--t-font-mono, monospace);
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    color: var(--t-citron, #CEFF35);
+    align-self: center;
+    text-transform: uppercase;
+  }
+  .t-countdown__sub {
+    font-size: 16px;
+    color: rgba(255, 255, 255, 0.7);
+    margin-top: 16px;
+  }
+  .t-countdown.is-settled .t-countdown__number { color: var(--t-citron, #CEFF35); }
+  .t-countdown.is-settled .t-countdown__sub::before {
+    content: "Settled. ";
+    color: var(--t-citron, #CEFF35);
+    font-weight: 600;
+  }
+</style>
+
+<script>
+(function () {
+  function fmtDateLabel(d) {
+    return d.toLocaleDateString('en-NZ', {
+      weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
+    }).toUpperCase();
+  }
+  function update(el) {
+    var iso = el.getAttribute('data-settlement-date');
+    if (!iso || iso.indexOf('{{') === 0) return; // unbound
+    var target = new Date(iso + 'T11:00:00+12:00'); // 11am NZT, settlement time
+    var now = new Date();
+    var diffMs = target - now;
+    var label = el.querySelector('.t-countdown__date-label');
+    if (label) label.textContent = fmtDateLabel(target);
+
+    var daysEl = el.querySelector('.t-countdown__days');
+    var hoursEl = el.querySelector('.t-countdown__hours');
+
+    if (diffMs <= 0) {
+      el.classList.add('is-settled');
+      daysEl.textContent = '0';
+      hoursEl.textContent = '0';
+      return;
+    }
+    var totalHours = Math.floor(diffMs / (1000 * 60 * 60));
+    var days = Math.floor(totalHours / 24);
+    var hours = totalHours % 24;
+    daysEl.textContent = String(days);
+    hoursEl.textContent = String(hours);
+  }
+
+  function init() {
+    var nodes = document.querySelectorAll('.t-countdown');
+    nodes.forEach(update);
+    setInterval(function () { nodes.forEach(update); }, 60 * 1000); // 1 min
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else { init(); }
+})();
+</script>

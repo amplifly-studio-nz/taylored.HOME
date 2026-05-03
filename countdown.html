@@ -1,0 +1,228 @@
+<!--
+  taylored.HOME — Concierge bubble (floating bottom-right)
+  --------------------------------------------------------
+  REQUIRES: _shared.css in the app header.
+  PASTE TARGET: App settings → Custom code → Footer (so it appears on every page).
+
+  Behaviour:
+    - Shows a floating bubble in the bottom-right with the lowercase t. avatar.
+    - Click → expands into a small chat window with three suggestion chips.
+    - Click a chip OR send a message → routes the user to /ask?q={query}
+      (the full Ask taylored. page handles the conversation).
+    - Hidden on /ask itself (avoid duplicate chat surfaces).
+
+  Why route to /ask instead of running the chat inline:
+    - The full Ask page persists conversations to ConciergeMessages Airtable.
+    - Inline would require duplicating the AI plumbing.
+    - This bubble is a quick entry, not a parallel chat.
+-->
+
+<div class="t-concierge" id="t-concierge" hidden>
+  <button class="t-concierge__bubble" type="button" aria-label="Ask taylored.">
+    <span class="t-concierge__avatar" aria-hidden="true">
+      t<span class="dot">.</span>
+    </span>
+    <span class="t-concierge__bubble-label">Ask taylored.</span>
+  </button>
+
+  <div class="t-concierge__panel" role="dialog" aria-modal="false" aria-labelledby="t-concierge-h" hidden>
+    <header class="t-concierge__panel-head">
+      <span class="t-concierge__avatar" aria-hidden="true">t<span class="dot">.</span></span>
+      <div>
+        <h3 id="t-concierge-h" class="t-concierge__h">Ask taylored.</h3>
+        <p class="t-concierge__sub">Plain English answers — anytime.</p>
+      </div>
+      <button class="t-concierge__close" type="button" aria-label="Close">×</button>
+    </header>
+
+    <div class="t-concierge__chips">
+      <button type="button" class="t-concierge__chip" data-q="When is settlement?">When is settlement?</button>
+      <button type="button" class="t-concierge__chip" data-q="What to bring on walkthrough day">What to bring on walkthrough day</button>
+      <button type="button" class="t-concierge__chip" data-q="Who is my lawyer?">Who is my lawyer?</button>
+    </div>
+
+    <form class="t-concierge__form" action="/ask" method="get">
+      <input type="text" name="q" class="t-concierge__input" placeholder="Ask anything…" autocomplete="off" />
+      <button type="submit" class="t-concierge__send" aria-label="Send">→</button>
+    </form>
+  </div>
+</div>
+
+<style>
+  .t-concierge {
+    position: fixed;
+    right: 24px;
+    bottom: 24px;
+    z-index: 9000;
+    font-family: var(--t-font-body, "Inter", sans-serif);
+  }
+
+  /* Bubble */
+  .t-concierge__bubble {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 20px 14px 14px;
+    background: var(--t-ink, #2B2B2B);
+    color: var(--t-paper, #FFFFFF);
+    border: 0;
+    border-radius: 999px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 500;
+  }
+  .t-concierge__bubble:hover { background: #1d1d1d; }
+
+  .t-concierge__avatar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background: var(--t-citron, #CEFF35);
+    color: var(--t-ink, #2B2B2B);
+    border-radius: 999px;
+    font-family: var(--t-font-display, "Inter Black", sans-serif);
+    font-weight: 900;
+    font-size: 16px;
+    letter-spacing: -0.04em;
+    line-height: 1;
+  }
+  .t-concierge__avatar .dot { color: var(--t-ink, #2B2B2B); }
+
+  .t-concierge__bubble-label { font-weight: 600; letter-spacing: -0.01em; }
+
+  /* Panel */
+  .t-concierge__panel {
+    position: absolute;
+    right: 0;
+    bottom: 64px;
+    width: 360px;
+    max-width: calc(100vw - 32px);
+    background: var(--t-paper, #FFFFFF);
+    border: 1px solid var(--t-line, #E5E1D7);
+    border-radius: 16px;
+    box-shadow: 0 24px 64px rgba(0,0,0,0.18);
+    overflow: hidden;
+  }
+  .t-concierge__panel-head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 16px 14px;
+    border-bottom: 1px solid var(--t-line, #E5E1D7);
+  }
+  .t-concierge__h {
+    margin: 0;
+    font-family: var(--t-font-display, "Inter Black", sans-serif);
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--t-ink, #2B2B2B);
+  }
+  .t-concierge__sub {
+    margin: 2px 0 0;
+    font-size: 12px;
+    color: var(--t-ink-lt, #6B6B6B);
+  }
+  .t-concierge__close {
+    margin-left: auto;
+    background: transparent;
+    border: 0;
+    font-size: 22px;
+    color: var(--t-ink-lt, #6B6B6B);
+    cursor: pointer;
+    line-height: 1;
+    padding: 4px 8px;
+  }
+  .t-concierge__close:hover { color: var(--t-ink, #2B2B2B); }
+
+  .t-concierge__chips {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 14px 16px;
+  }
+  .t-concierge__chip {
+    background: var(--t-cream, #F0EEE9);
+    border: 1px solid var(--t-line, #E5E1D7);
+    color: var(--t-ink, #2B2B2B);
+    text-align: left;
+    padding: 10px 14px;
+    border-radius: 999px;
+    font-size: 13px;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .t-concierge__chip:hover {
+    background: var(--t-paper, #FFFFFF);
+    border-color: var(--t-citron, #CEFF35);
+  }
+
+  .t-concierge__form {
+    display: flex;
+    align-items: stretch;
+    border-top: 1px solid var(--t-line, #E5E1D7);
+    padding: 12px;
+    gap: 8px;
+  }
+  .t-concierge__input {
+    flex: 1;
+    border: 1px solid var(--t-line, #E5E1D7);
+    border-radius: 999px;
+    padding: 10px 14px;
+    font-size: 14px;
+    font-family: inherit;
+    color: var(--t-ink, #2B2B2B);
+    outline: none;
+  }
+  .t-concierge__input:focus { border-color: var(--t-citron, #CEFF35); }
+  .t-concierge__send {
+    background: var(--t-citron, #CEFF35);
+    color: var(--t-ink, #2B2B2B);
+    border: 0;
+    border-radius: 999px;
+    width: 40px;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: 700;
+  }
+
+  @media (max-width: 480px) {
+    .t-concierge__bubble-label { display: none; }
+    .t-concierge__bubble { padding: 12px; }
+  }
+</style>
+
+<script>
+(function () {
+  // Hide on /ask page (don't show the bubble where the full chat already lives)
+  if (window.location && (window.location.pathname || '').indexOf('/ask') === 0) return;
+
+  var root = document.getElementById('t-concierge');
+  if (!root) return;
+  root.hidden = false;
+
+  var bubble = root.querySelector('.t-concierge__bubble');
+  var panel = root.querySelector('.t-concierge__panel');
+  var closeBtn = root.querySelector('.t-concierge__close');
+  var chips = root.querySelectorAll('.t-concierge__chip');
+
+  function open() { panel.hidden = false; bubble.setAttribute('aria-expanded', 'true'); }
+  function close() { panel.hidden = true; bubble.setAttribute('aria-expanded', 'false'); }
+
+  bubble.addEventListener('click', function () { panel.hidden ? open() : close(); });
+  closeBtn.addEventListener('click', close);
+  chips.forEach(function (chip) {
+    chip.addEventListener('click', function () {
+      var q = chip.getAttribute('data-q') || '';
+      window.location.href = '/ask?q=' + encodeURIComponent(q);
+    });
+  });
+
+  // Close on Escape
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && !panel.hidden) close();
+  });
+})();
+</script>

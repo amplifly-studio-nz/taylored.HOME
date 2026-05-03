@@ -1,0 +1,91 @@
+/*
+  taylored.HOME — Softr brand variables &amp; base type
+  -------------------------------------------------
+  PASTE TARGET: App settings → Custom code → Header (CSS section)
+  Once pasted, every other Custom Code block in the app will inherit these tokens.
+*/
+
+:root {
+  /* Ink scale */
+  --t-ink: #2B2B2B;
+  --t-ink-lt: #6B6B6B;
+  --t-ink-mute: #9B9B9B;
+
+  /* Paper / surfaces */
+  --t-paper: #FFFFFF;
+  --t-cream: #F0EEE9;
+  --t-cream-2: #E8E5DD;
+
+  /* Brand accents */
+  --t-citron: #CEFF35;
+  --t-citron-deep: #B8E62E;
+  --t-sky: #A6CFE0;
+  --t-olive: #898F64;
+  --t-amber: #E0A85B;
+  --t-clay: #C84A3F;
+
+  /* Lines &amp; borders */
+  --t-line: #E5E1D7;
+  --t-line-strong: #C8C2B0;
+
+  /* Type */
+  --t-font-display: "Mansfield", "Inter Black", system-ui, sans-serif;
+  --t-font-body: "Inter", system-ui, -apple-system, sans-serif;
+  --t-font-mono: "Anonymous Pro", ui-monospace, "SF Mono", monospace;
+  --t-font-script: "The Seasons", "Cormorant Garamond", serif;
+
+  /* Spacing */
+  --t-radius: 4px;
+  --t-radius-lg: 8px;
+}
+
+/* Brand wordmark — citron full-stops on .app-logo */
+.app-logo,
+.t-wordmark {
+  font-family: var(--t-font-display);
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  color: var(--t-ink);
+}
+.app-logo .dot,
+.t-wordmark .dot {
+  color: var(--t-citron);
+}
+.t-wordmark .script {
+  font-family: var(--t-font-script);
+  font-weight: 300;
+  letter-spacing: 0;
+}
+
+/* Editorial label */
+.t-eyebrow {
+  font-family: var(--t-font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--t-ink-lt);
+}
+
+/* Status pills (used by steps-timeline + dashboard panels) */
+.t-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-family: var(--t-font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.t-pill--done    { background: var(--t-olive);  color: var(--t-paper); }
+.t-pill--current { background: var(--t-citron); color: var(--t-ink);   }
+.t-pill--upcoming{ background: var(--t-line);   color: var(--t-ink-lt);}
+
+/* Reset focus rings to brand */
+*:focus-visible {
+  outline: 2px solid var(--t-citron);
+  outline-offset: 2px;
+}
